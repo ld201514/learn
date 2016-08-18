@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8" />
+<title>slider-2</title>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+<meta name="description" content="" />
+<meta name="keywords" content="" />
+<script src="../images/../js/jq.js"></script>
+<script src="../images/../js/rem.js"></script>
+ <link href="../css/mobiscroll.custom-3.0.0-beta.min.css" rel="stylesheet" type="text/css" />
+  <link href="../css/gongw.css" rel="stylesheet" type="text/css" />
+   <link href="../css/duoxuan.css" rel="stylesheet" type="text/css" />
+    <link href="../css/public.css" rel="stylesheet" type="text/css" />
+    <script src="../images/../js/mobiscroll.custom-3.0.0-beta.min.js" type="text/javascript"></script>
+<script src="../images/../js/public.js" type="text/javascript"></script>
+<script>
+$(function(){
+$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {
+        
+        // 不重复发送相同请求
+        var key = generatePendingRequestKey(options);
+        if (!pendingRequests[key]) {
+        	storePendingRequest(key, jqXHR);
+        } else {
+        	// or do other
+        	jqXHR.abort();
+        }
+        
+		var complete = options.complete;
+		options.complete = function(jqXHR, textStatus) {
+			// clear from pending requests
+			pendingRequests[jqXHR.pendingRequestKey] = null;
+			if ($.isFunction(complete)) {
+				complete.apply(this, arguments);
+			}
+		};
+	});
+$.ajax({//登录方法接口：
+　　type:'post',
+	url:'http://192.168.1.237:9003/ggws/pub/login',
+　　data:{'userid':'try','password':'try123456'},
+　　dataType:'json',
+	cache:false,
+	async:false,
+　　success:function(data){
+		console.log(data)
+	},
+	error:function(err1){
+	console.log(err1);　　
+　　}
+　　})
+
+$('#pageF .search').click(function(){//个人答案选取查询生成界面；
+$('.boxf').html('');
+$.ajax({//读取个人健康档案接口
+type:'get',
+url:'http://192.168.1.237:9003/ggws/pub/archive',
+data:{'name':$('#pageF .chaxun').val(),'right': '0111'},
+dataType:'json',
+cache:false,
+success:function(data3){
+console.log(data3)
+var arr='';
+for(var i=0;i<data3.conarray.length;i++){
+arr+='<div class="main"><div class="line"></div>'+
+'		  <div class="head">'+
+'		<div class="title">'+
+'			健康档案号：'+data3.conarray[i].grjkdah+
+'		</div>'+'<p class="inputdate" data-title="'+i+'">'+data3.conarray[i].inputdate+'</p>'+
+'	  </div>'+
+' <div class="content">'+
+'  <ul>'+
+'		<li>'+
+'		<div class="img"><img src="../images/../images/id_card.png" class="id_card"></div><p class="card">'+data3.conarray[i].sfzh+'</p>'+
+'	</li>'+
+'	<li>'+
+'	<div class="img"><img src="../images/../images/img_info_list_name_left.png" class="img_info_list_name_left"></div><p class="name">'+data3.conarray[i].name+'</p><span class="icon"></span><p class="timer">'+data3.conarray[i].csrq+'</p>'+
+'</li>'+
+'<li>'+
+'<div class="img"><img src="../images/../images/img_info_list_addr.png" class="img_info_list_addr"></div><p class="dz">'+data3.conarray[i].xzdz+'</p>'+
+'</li>'+
+'</ul>'+
+'</div></div>'
+}	
+$('.boxf').append(arr);//生成个人档案页面；
+	var sex='';
+		if(data3.conarray[0].sex==2){
+		$('#pageF .icon').css('background-image','url(../images/sex_g.png)') 
+		sex='女'
+		//设置女性性别图标；
+		}else{
+	sex='男'
+	}
+$('#pageF .main').click(function(){//判断是否登记同时进入增加脑卒中登记数据；
+var zid=data3.conarray[$(this).find('.inputdate').data('title')].jkdaid;//获取相应的健康id;
+var index=$(this).find('.inputdate').data('title');
+console.log(zid);
+console.log(index);
+$.ajax({//读取冠心病、脑卒中病人是否已登记接口
+type:'get',
+url:'http://192.168.1.237:9003/ggws/gxy/verifyenter',
+data:{'type':'2','zid':zid},//
+dataType:'json',
+cache:false,
+success:function(data2){
+console.log(data2);
+if(!data2.enter){	
+$.ajax({//读取个人健康档案接口
+type:'get',
+url:'http://192.168.1.237:9003/ggws/zl/getzljxk',
+data:{'name':$('#pageF .search').val(),'right': '0111'},
+dataType:'json',
+cache:false,
+success:function(data1){
+console.log(data3)
+console.log(data1.conarray)
+		next('#pageF','#pageH')
+$('.boxh').html('');
+var arr1='<div class="one">'+
+'<span class="left"><label>姓名:'+data3.conarray[index].name+'</label></span>'+'<span class="right3">编号:'+data3.conarray[index].grjkdah+'</span>'+
+'</div><div class="one">'+
+'<span class="left"><label>监护人信息</label></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>监护人姓名:</label><input class="jhrxm" /></span>'+
+'<span class="right"><label>与患者关系:</label><input class="yhzgx" id="select" /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>监护人电话:</label><input class="jhrdh"  /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>监护人地址:</label><input class="jhrdz"  /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>村(居)委会联系人姓名:</label><input class="cwhxm"  /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>村(居)委会联系人电话:</label><input class="cwhdh" /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left1"><label>知情同意:</label><input class="bmjpx"  id="select1"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left1"><label>签字:</label><input class="qz"  disabled=true/></span>'+
+'<span class="right"><label>签字日期:</label><input class="qz" id="date" disabled=true/></span>'+
+'</div>'+
+'<div class="line one"></div>'+
+'<div class="one">'+
+'<span class="left"><label>初病发日期:</label><input class="blxtx" id="date1" /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>既往主要症状:</label><input class="jwzyzz" readonly/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>门诊:</label><input class="zdyy" id="select2" /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>首次抗精神病治疗时间:</label><input class="sckjsb" id="date2" disabled=true/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>住院:</label><input class="zy"  /></span>'+
+'</div>'+
+'<div class="line one"></div>'+
+'<div class="one">'+
+'<span class="left"><label>目前诊断情况:诊断</label><input class="mqzdqk"  /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>确诊医院:</label><input class="qzyy"  /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>确诊日期:</label><input class="qzyy"  id="date3"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>最后一次治疗效果:</label><input class="qzyy"id="select3"  /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>关锁情况:</label><input class="gsqk"  id="select4"/></span>'+
+'<span class="right"><label>经济情况:</label><input class="jjqk" id="select5" /></span>'+
+'</div>'+
+'<div class="line"></div>'+
+'<div class="one"><span class="left"><label>患者对家庭社会的影响</label></span></div>'+
+'<div class="one"><div class="left2"><label>轻度滋事:</label><input class="qdzs"/>次</span></div>'+
+'<div class="right"><label>肇事:</label><input class="zs"/>次</div></div>'+
+'<div class="one"><div class="left2"><label>肇祸:</label><input class="zh"/>次</span></div>'+
+'<div class="right"><label>自伤:</label><input class="zsh"/>次</div></div>'+
+'<div class="one"><div class="left2"><label>自杀未遂:</label><input class="zsws"/>次</span></div></div>'+
+'<div class="one"><span class="left"><label>专科医生意见</label></span></div>'+
+'<textarea name="MSG" cols=40 rows=4>'+
+'</textarea>'+
+'<div class="one">'+
+'<span class="left"><label>填表日期:</label><input class="zrys" id="date4" /></span>'+
+'<span class="right"><label>医生签字:</label><input class="ysqm" /></span>'+
+'</div>';
+
+$('.boxh').append(arr1);//生成个人档案选取页面内的脑卒中登记页面；
+
+
+jsbsjzd('#select','ZDK_JSJBFZ_JHRYHZGX')//与患者的关系：
+jsbsjzd3('#select1','ZDK_JSJBFZ_ZQTY')//知情同意；
+jsbsjzd3('#select2','ZDK_JSJBFZ_MZZL')//门诊；
+jsbsjzd('#select3','ZDK_JSJBFZ_ZJZLXG')//最近一次治疗效果
+jsbsjzd('#select4','ZDK_JSJBFZ_GSQK')//关锁情况：
+jsbsjzd('#select5','ZDK_JSJBFZ_JJQK')//经济情况；
+
+sjzd1('.jwzyzz','ZDK_JSJBFZ_JYZYZZ',1)//既往主要症状：
+date('#date');//调用日期函数；
+date('#date1');//调用日期函数；	
+//date('#date2');//调用日期函数；
+date('#date3');//调用日期函数；
+date('#date4');//调用日期函数；	
+date('#date5');//调用日期函数
+
+	$('#btnHNext').click(function(){
+	var jhrhzgx=$('#select').data('name')||"";//与患者关系；
+var zqty=$('#select1').data('name')||"";//知情同意；
+	var mzzlzk=$('#select2').data('name')||"";//门诊；
+var zjzlxg=$('#select3').data('name')||"";//最后一次治疗效果；
+var gsqk=$('#select4').data('name')||"";//关锁情况；
+var jjqk=$('#select5').data('name')||"";//经济情况；
+//多选；
+var ywzyjszz=$('.jwzyzz').data('sjzd')||"";//既往主要症状；
+var box='';
+console.log(zid);
+var box='{"jkdaid":"'+zid+'","inputor":"管理员","inputdate":"2016-08-01","jhrxm":"'+$('.jhrxm').val()+'","jhrhzgx":"'+jhrhzgx+'","jhrdh":"'+$('.jhrdh').val()+'","jhrdz":"'+$('.jhrdz').val()+'","jwhlxrdh":"'+$('.cwhdh').val()+'","jwhlxrxm":"'+$('.cwhxm').val()+'","zqty":"'+zqty+'","zqtyqz":"'+$('.qz').val()+'","qzsj":"'+$('#date').val()+'","cfbrq":"'+$('#date1').val()+'","ywzyjszz":"'+ywzyjszz+'","mzzlzk":"'+mzzlzk+'","mzzlsj":"'+$('#date2').val()+'","zycs":"'+$('.zy').val()+'","zd":"'+$('.mqzdqk').val()+'","zjzlxg":"'+zjzlxg+'","gsqk":"'+gsqk+'","jjqk":"'+jjqk+'","qdzscs":"'+$('.qdzs').val()+'","zscs":"'+$('.zs').val()+'","zhcs":"'+$('.zh').val()+'","zs":"'+$('.zsh').val()+'","zswscs":"'+$('.zsws').val()+'","tbrq":"'+$('#date4').val()+'","zdys":"'+$('.qzyy').val()+'","zdsj":"'+$('#date3').val()+'","zl":"'+$('textarea').val()+'","zrys":"'+$('.ysqm').val()+'"}';
+var box=box.replace(/"undefined"/g,'""').replace(/undefined/g,'""');
+console.log(box);
+var content=encodeURIComponent(box);//转化json;
+$.ajax({//新增随访；
+　　type:'post',
+	url:'http://192.168.1.237:9003/ggws/jsb/jsbjxk_edit',
+　　data:{'edit_stat':'0','content':content},
+　　dataType:'json',
+	cache:false,
+	async:false,
+　　success:function(data3){
+		console.log(data3)
+	},
+	error:function(err1){
+	console.log(err1);　　
+　　}
+　　})
+});//新增；下面是修改；
+	
+},
+error:function(err){
+console.log(err);
+}})
+
+}else{
+alert('已登记')
+}
+},
+error:function(err3){
+console.log(err3);
+}
+})
+});
+$('#pageeBack').click(function(){
+$('.box3').html('');
+$('.box1').html('');
+$('#pageF .search').val('');
+$('#pageB').css({'display' : 'block'});
+$('#pageE').addClass('animatestart sliderightout');
+setTimeout(function(){ //动画结束时重置class
+$('#pageE').css('display', 'none');
+$('#pageE').removeClass('animatestart sliderightout');
+}, 350);
+})
+},
+error:function(err4){
+console.log(err4);
+}
+})	
+})
+
+
+$('#pageA .search').click(function(){
+$('.box').html('');
+$.ajax({//读取精神病管理专项卡接口：
+　　type:'get',
+	url:'http://192.168.1.237:9003/ggws/jsb/getjsbjxk',
+　　data:{'name':$('#pageA .chaxun').val(),'right':"0111"},
+　　dataType:'json',
+	cache:false,
+　　success:function(data){
+		console.log(data);
+		
+		var arr1='';
+		for(var i=0;i<data.conarray.length;i++){
+	arr1+='<div class="main">'+
+'	<div class="line"></div>'+
+'		  <div class="head">'+
+'		<div class="title">'+
+'			健康档案号：'+data.conarray[i].grjkdah+
+'		</div>'+
+'	  </div>'+
+' <div class="content">'+
+'  <ul>'+
+'		<li>'+
+'		<div class="img"><img src="../images/id_card.png" class="id_card"></div><p class="card">'+data.conarray[i].sfzh+'</p>'+'<img src="../images/iv_public_editor.png" class="editor">'+
+'	</li>'+
+'	<li>'+
+'	<div class="img"><img src="../images/img_info_list_name_left.png" class="img_info_list_name_left"></div><p class="name">'+data.conarray[i].name+'</p><span class="icon"></span><p class="timer">'+data.conarray[i].csrq+'</p>'+
+'</li>'+
+'<li>'+
+'<div class="img"><img src="../images/img_info_list_addr.png" class="img_info_list_addr"></div><p class="dz">'+data.conarray[i].xzdz+'</p>'+
+'</li>'+
+'</ul>'+
+'</div>'+
+'<div class="bottom">'+
+'	<ul>'+
+'		<li class="ckjh">'+
+'	查看计划'+
+'		</li>'+
+'		<li class="xzsf">'+
+'		新增随访'+
+'		</li>'+
+'		<li class="none">'+
+'		随访记录'+
+'		</li>'+
+'	</ul>'+
+'</div>'+
+'</div>';}
+		$('.box').append(arr1);//；
+			var sex='';
+		if(data.conarray[0].sex==2){
+		$('#pageA .icon').css('background-image','url(../images/sex_g.png)') 
+		sex='女'
+		//设置女性性别图标；
+		}else{
+	sex='男'
+	}
+	$('#pageA .editor').click(function(){
+		$('.boxi').html('');
+	next('#pageA','#pageI');
+		var index=$('#pageA .editor').index(this);//获取不是同级的class的index;
+		console.log(index);
+		console.log(data)
+	$.ajax({//读取精神病管理专项卡所有字段接口：
+　　type:'get',
+	url:'http://192.168.1.237:9003/ggws/jsb/getjsbjxkjl',
+　　data:{'id':data.conarray[index].dxdjid},
+　　dataType:'json',
+	cache:false,
+　　success:function(data){
+		console.log(data);
+		var arr1='<div class="one">'+
+'<span class="left"><label>监护人信息</label></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>监护人姓名:</label><input class="jhrxm" value="'+data.conarray[0].jhrxm+'"  /></span>'+
+'<span class="right"><label>与患者关系:</label><input class="yhzgx" id="select" /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>监护人电话:</label><input class="jhrdh" value="'+data.conarray[0].jhrdh+'" /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>监护人地址:</label><input class="jhrdz"  value="'+data.conarray[0].jhrdz+'"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>村(居)委会联系人姓名:</label><input class="cwhxm"  value="'+data.conarray[0].jwhlxrxm+'"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>村(居)委会联系人电话:</label><input class="cwhdh" value="'+data.conarray[0].jwhlxrdh+'"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left1"><label>知情同意:</label><input class="bmjpx"  id="select1"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left1"><label>签字:</label><input class="qz"  value="'+data.conarray[0].zqtyqz+'"/></span>'+
+'<span class="right"><label>签字日期:</label><input class="qz" id="date" value="'+data.conarray[0].qzsj+'"/></span>'+
+'</div>'+
+'<div class="line one"></div>'+
+'<div class="one">'+
+'<span class="left"><label>初病发日期:</label><input class="blxtx" id="date1" value="'+data.conarray[0].cfbrq+'"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>既往主要症状:</label><input class="jwzyzz" readonly/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>门诊:</label><input class="zdyy" id="select2" /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>首次抗精神病治疗时间:</label><input class="sckjsb" id="date2" value="'+data.conarray[0].mzzlsj+'"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>住院:</label><input class="zy"  value="'+data.conarray[0].zycs+'"/></span>'+
+'</div>'+
+'<div class="line one"></div>'+
+'<div class="one">'+
+'<span class="left"><label>目前诊断情况:诊断</label><input class="mqzdqk"  value="'+data.conarray[0].zd+'"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>确诊医院:</label><input class="qzyy" value="'+data.conarray[0].zdys+'" /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>确诊日期:</label><input class="qzyy"  id="date3"value="'+data.conarray[0].zdsj+'"/></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>最后一次治疗效果:</label><input class="qzyy"id="select3"  /></span>'+
+'</div>'+
+'<div class="one">'+
+'<span class="left"><label>关锁情况:</label><input class="gsqk"  id="select4"/></span>'+
+'<span class="right"><label>经济情况:</label><input class="jjqk" id="select5" /></span>'+
+'</div>'+
+'<div class="line"></div>'+
+'<div class="one"><span class="left"><label>患者对家庭社会的影响</label></span></div>'+
+'<div class="one"><div class="left2"><label>轻度滋事:</label><input class="qdzs"value="'+data.conarray[0].qdzscs+'"/>次</span></div>'+
+'<div class="right"><label>肇事:</label><input class="zs"value="'+data.conarray[0].zscs+'"/>次</div></div>'+
+'<div class="one"><div class="left2"><label>肇祸:</label><input class="zh"value="'+data.conarray[0].zhcs+'"/>次</span></div>'+
+'<div class="right"><label>自伤:</label><input class="zsh"value="'+data.conarray[0].zs+'"/>次</div></div>'+
+'<div class="one"><div class="left2"><label>自杀未遂:</label><input class="zsws"value="'+data.conarray[0].zswscs+'"/>次</span></div></div>'+
+'<div class="one"><span class="left"><label>专科医生意见</label></span></div>'+
+'<textarea name="MSG" cols=40 rows=4 >'+data.conarray[0].zl+
+'</textarea>'+
+'<div class="one">'+
+'<span class="left"><label>填表日期:</label><input class="zrys" id="date4" value="'+data.conarray[0].tbrq+'"/></span>'+
+'<span class="right"><label>医生签字:</label><input class="ysqm" value="'+data.conarray[0].zrys+'"/></span>'+
+'</div>';
+$('.boxi').append(arr1);//生成肿瘤专项档案修改界面；
+
+function scdxsj1(id,typename,id1){//多选数字变文字函数；
+console.log(data.conarray[0][id])
+var listlist=data.conarray[0][id].split(',');
+console.log(listlist);
+var str6='';
+$.ajax({//读取并发症合并症数据字典接口：
+　　type:'get',
+	url:'http://192.168.1.237:9003/ggws/pub/getmedicineone',
+　　data:{'type':1,'typename':typename},//
+　　dataType:'json',
+	cache:false,
+　　success:function(data2){
+		console.log(data2);
+				$(id1).val('');	
+		$.each(listlist,function(i,e1){
+$.each(data2.conarray,function(i,e2){
+if(e2.id==e1){
+	if($(id1).val()){var str7=e2.name+','+$(id1).val()}else{var str7=e2.name}
+$(id1).val(str7);
+
+}
+})
+})
+		},
+		error:function(err){
+		console.log(err);
+		}})
+}
+
+//必须要先调用单选函数；让选择器变为#select_dummy的形式；
+jsbsjzd('#select','ZDK_JSJBFZ_JHRYHZGX')//与患者的关系：
+jsbsjzd3('#select1','ZDK_JSJBFZ_ZQTY')//知情同意；
+jsbsjzd3('#select2','ZDK_JSJBFZ_MZZL')//门诊；
+jsbsjzd('#select3','ZDK_JSJBFZ_ZJZLXG')//最近一次治疗效果
+jsbsjzd('#select4','ZDK_JSJBFZ_GSQK')//关锁情况：
+jsbsjzd('#select5','ZDK_JSJBFZ_JJQK')//经济情况；
+
+sjzd1('.jwzyzz','ZDK_JSJBFZ_JYZYZZ',1)//既往主要症状：
+date('#date');//调用日期函数；
+date('#date1');//调用日期函数；	
+//date('#date2');//调用日期函数；
+date('#date3');//调用日期函数；
+date('#date4');//调用日期函数；	
+date('#date5');//调用日期函数
+
+//多选,单选数字变文字；
+scdxsj1('jhrhzgx','ZDK_JSJBFZ_JHRYHZGX','#select_dummy')//与患者的关系：；
+scdxsj1('zqty','ZDK_JSJBFZ_ZQTY','#select1_dummy')//知情同意；；
+scdxsj1('mzzlzk','ZDK_JSJBFZ_MZZL','#select2_dummy')//门诊
+scdxsj1('zjzlxg','ZDK_JSJBFZ_ZJZLXG','#select3_dummy')//最近一次治疗效果
+scdxsj1('gsqk','ZDK_JSJBFZ_GSQK','#select4_dummy')//关锁情况；
+scdxsj1('jjqk','ZDK_JSJBFZ_JJQK','#select5_dummy')//经济情况；
+
+scdxsj1('ywzyjszz','ZDK_JSJBFZ_JYZYZZ','.jwzyzz')//既往主要症状；
+$('#btnINext').unbind('click').bind('click',function(){//肿瘤专项档案修改；
+	alert(123);
+	console.log(data.conarray[0].jkdaid)
+	console.log(data);
+var ywzyjszz=$('.jwzyzz').data('sjzd')||data.conarray[0].ywzyjszz||"";
+
+var jhrhzgx=$('#select').data('name')||data.conarray[0].jhrhzgx||"";
+var zjzlxg=$('#select3').data('name')||data.conarray[0].zjzlxg||"";
+var mzzlzk=$('#select2').data('name')||data.conarray[0].mzzlzk||"";
+var zqty=$('#select1').data('name')||data.conarray[0].zqty||"";
+var jjqk=$('#select5').data('name')||data.conarray[0].jjqk||"";
+var gsqk=$('#select4').data('name')||data.conarray[0].gsqk||"";
+var box='{"jhrhzgx":"'+jhrhzgx+'","delflag":"0","deldate":"","jwhlxrxm":"'+$(".cwhxm").val()+'","jwhlxrdh":"'+$(".cwhdh").val()+'","jzs":"","inputdate":"'+data.conarray[0].inputdate+'","zswscs":"'+$(".zsws").val()+'","inputor":"jnjnadmin","zqtyqz":"'+$(".qz").val()+'","status":"0","mqzkqt":"","mqklzd":"","jwzls":"","jhryb":"","jhrxm":"'+$(".jhrxm").val()+'","jhrdz":"'+$(".jhrdz").val()+'","jhrdh":"'+$(".jhrdh").val()+'","modifydate":"'+data.conarray[0].modifydate+'","ywzyjszz":"'+ywzyjszz+'","zs":"'+$(".zsh").val()+'","zl":"'+$("textarea").val()+'","zg":"","zd":"'+$(".mqzdqk").val()+'","bh":"'+data.conarray[0].bh+'","zzcxsj":"","zjzlxg":"'+zjzlxg+'","jkdaid":"'+data.conarray[0].jkdaid+'","editor":"try","dxdjid":"'+data.conarray[0].dxdjid+'","mzzlzk":"'+mzzlzk+'","mzzlsj":"'+$("#date2").val()+'","zycs":"'+$(".zy").val()+'","zscs":"'+$(".zs").val()+'","zrys":"'+$(".ysqm").val()+'","zqty":"'+zqty+'","zhcs":"'+$(".zh").val()+'","zdys":"'+$(".qzyy").val()+'","zdsj":"'+$("#date3").val()+'","tbrq":"'+$("#date4").val()+'","qzsj":"'+$("#date").val()+'","lrjg":"011109","jjqk":"'+jjqk+'","jbyx":"","jayy":"","jarq":"","gsqk":"'+gsqk+'","ghjb":"","cfbrq":"'+$("#date1").val()+'","qdzscs":"'+$(".qdzs").val()+'","djtshyx":"","qzrq":""}'
+console.log(box);
+content=encodeURIComponent(box);
+$.ajax({//修改；
+　　type:'post',
+	url:'http://192.168.1.237:9003/ggws/jsb/jsbjxk_edit',
+　　data:{'edit_stat':'1','content':content},//
+　　dataType:'json',
+	cache:false,
+　　success:function(data2){
+		console.log(data2);
+
+	},
+	error:function(err3){
+	　console.log(err3);　
+　　}
+　　})
+	
+})
+
+	},
+	error:function(err1){
+	console.log(err1);　　
+　　}
+　　})
+	})
+
+		$('.ckjh').click(function(){//查看计划；
+		$('.main1').html('');
+          $('#pageB').css({'display' : 'block'});
+           $('#pageB').addClass('animatestart sliderightin');            
+
+            setTimeout(function(){ //动画结束时重置class
+              $('#pageA').css({'display' : 'none'});  
+              $('#pageB').removeClass('animatestart sliderightin');
+            }, 350);
+			
+				$.ajax({//随访执行计划
+　　type:'get',
+	url:'http://192.168.1.237:9003/ggws/task/getsfzxjh',
+　　data:{'id':'331127000142405','type':'6'},
+　　dataType:'json',
+	cache:false,
+	async:false,
+　　success:function(data1){
+		console.log(data1)
+	console.log(data);
+	
+
+		var arr1='';
+		var arr2='';
+		for(var i=0;i<data1.conarray.length;i++){
+		arr2+=
+'<li><div class="left"><div class="sfsj">随访时间:</div><div class="time">'+data1.conarray[i].actiondate+'</div></div><div class="fwq">还未到访问期</div></li>';}
+		arr1+=' <div class="content">'+
+'  <ul>'+
+'		<li>'+
+'		<p class="card1">姓名:'+data.conarray[0].name+'</p><p class="xb">性别:'+sex+'</p><p class="timer">出生日期:'+data.conarray[0].csrq+'</p>'+
+'	</li>'+
+'	<li>'+
+'	<p class="name">健康档案号:'+data.conarray[0].grjkdah+'</p>'+
+'</li>'+
+'<li>'+
+'<p>地址:</p><p class="dz">'+data.conarray[0].xzdz+'</p>'+
+'</li>'+
+'</ul>'+
+'</div>'+'<ul class="list">'+
+arr2+
+'</ul>';
+			$('.main1').append(arr1);		
+			},
+			error:function(err1){
+	console.log(err1);　　
+　　}
+			})
+			})
+$('.xzsf').click(function(){//新增随访；
+var index=$('.xzsf').index(this);
+console.log(index);
+			next('#pageA','#pageC');
+ 
+			$('.main3').html('');
+		
+			var arr='<div class="head"> '+
+'<div class="top"> '+
+'<div class="name">姓名：</div>'+
+'<div class="ming">'+data.conarray[index].name+'</div>'+
+'</div>'+
+'<div class="down"> '+
+'<div class="name">健康档案号：</div>'+
+'<div class="ming">'+data.conarray[index].grjkdah+'</div>'+
+'</div>'+
+'<div class="line"></div>'+
+'</div>'+
+'<div class="content">'+
+'<div class="left"><label>危险性:</label><select id="select2"class="zzl"/></select><span class="icon"></span></div>'+
+'<div class="right"><label>自知力:</label><select id="select"class="zzl"/></select><span class="icon"></span></div>'+
+'<div class="left"><label>目前症状:</label><input type="text"class="mqzz" readonly/><span class="icon"></span></div>'+
+'<div class="left"><label>睡眠情况:</label><input type="text"class="smqk"id="select1"/><span class="icon"></span></div>'+
+'<div class="right"><label>饮食情况:</label><input type="text"class="ysqk"id="select9"/><span class="icon"></span></div>'+
+'<div class="line"></div>'+
+'<div class="one"><span class="left"><label>社会功能情况</label></span></div>'+
+'<div class="left"><label>个人生活料理:</label><input class="grshll"id="select10"/><span class="icon"></span></div>'+
+'<div class="right"><label>家务劳动:</label><input class="jwld"id="select11"/><span class="icon"></span></div>'+
+'<div class="left"><label>社会人际交往:</label><input class="shrjjw"id="select12"/><span class="icon"></span></div>'+
+'<div class="right"><label>学习能力:</label><input class="xxnl"id="select13"/><span class="icon"></span></div>'+
+'<div class="left"><label>生产劳动及工作:</label><input class="scld"id="select14"/><span class="icon"></span></div>'+
+'<div class="line"></div>'+
+'<div class="one"><span class="left"><label>患者对家庭社会的影响</label></span></div>'+
+'<div class="left"><label>1.轻度滋事:</label><input class="qdzs"/></div>'+
+'<div class="right"><label>2.肇　事:</label><input class="zs"/></div>'+
+'<div class="left"><label>3.肇　　祸:</label><input class="zh"/></div>'+
+'<div class="right"><label>4.自　伤:</label><input class="zsh"/></div>'+
+'<div class="left"><label>5.自杀未遂:</label><input class="zsws"/></div>'+
+'<div class="line"></div>'+
+'<div class="left"><label>关锁情况:</label><select id="select3"></select><span class="icon"></span></div>'+
+'<div class="right"><label>住院情况:</label><select id="select4"class="zyqk"></select><span class="icon"></span></div>'+
+'<div class="left"><label>末次出院时间:</label><input class="mccysj"id="date2"disabled=true/><span class="icon"></span></div>'+
+'<div class="left"><label>实验室检查:</label><input class="sysjc"id="select16"/><span class="icon"></span></div>'+
+'<div class="left"><label>服药依从性:</label><select class="fyycx"id="select5"></select><span class="icon"></span></div>'+
+'<div class="left"><label>药物不良反应:</label><select class="ywblfy"id="select6"></select><span class="icon"></span></div>'+
+'<div class="left"><label>治疗效果:</label><select class="zlxg"id="select7"></select><span class="icon"></span></div>'+
+'<div class="left"><label>是否转诊:</label><input type="text"class="sfzz"id="select15"/><span class="icon"></span></div>'+
+'<div class="left"><label>转诊原因:</label><input type="text"class="zzyy"disabled=true/></div>'+
+'<div class="left"><label>转诊机构及科室:</label><input type="text"class="zzjg"disabled=true/></div>'+
+'<div class="line"></div>'+
+'<div class="qk2"><div class="yyqk">用药情况：</div><img src="../images/public_add.png" class="btn" /></div>'+
+'<div class="qk1"><div class="ywmc">药物名称</div><div class="mrcs">每日次数</div><div class="mcyl">每次药量</div><div class="cz">操作</div></div>'+
+'<div class="box2">'+
+'<div class="qk">'+
+'<input type="text" id="select100"></select><input type="text"class="mrcs1"/><input type="text"class="mcyl1"/><img src="../images/delete.png" class="btn1" />'+
+'</div>'+
+'</div>'+
+'<div class="line"></div>'+
+'<div class="left"><label>康复措施:</label><input type="text" class="kfcs" readonly/><span class="icon"></span></div>'+
+'<div class="left"><label>本次随访分类:</label><select class="bcsffl"id="select8"></select><span class="icon"></span></div>'+
+'<div class="left"><label>随访医生:</label><input type="text" class="sfys"value="管理员"/></div>'+
+'<div class="left"><label>随访时间:</label><input type="text" id="date"class="sfsj" value='+CurentTime()+'/><span class="icon"></span></div>'+
+'<div class="left"><label>下次随访时间:</label><input type="text" id="date1" class="xcsfsj"value= "'+addMoth(CurentTime(),3)+'" /><span class="icon"></span></div>'+
+'</div>';
+$('.main3').append(arr);
+
+var number=101;
+$('.box1').off('click').on('click','.btn',function(){//点击增加按钮再上opert_y=1；
+add(number);
+jsbsjzd("#select"+number,'ZDK_JSB_YW')
+
+$("#select"+number+"_dummy").css('width','2.05333rem')
+
+number++;
+})
+
+$('.box2').off('click').on('click','.btn1',function(e){//点击删除按钮再上opert_y=2;
+del(e);
+})		
+		
+jsbsjzd('#select','ZDK_JSJBFZ_ZZL')//读取精神病自知力数据字典接口：
+jsbsjzd('#select1','ZDK_JSJBFZ_QKNL')//读取精神病睡眠情况数据字典接口：
+jsbsjzd('#select2','ZDK_JSJBFZ_WXX')//读取精神病危险性情况数据字典接口：
+jsbsjzd('#select3','ZDK_JSJBFZ_GSQK')//读取精神病关锁情况数据字典接口：
+jsbsjzd3('#select4','ZDK_JSJBFZ_ZYQK')//精神病住院情况
+jsbsjzd('#select5','ZDK_JKTJB_FYYCX')//精神病服药依从性；
+jsbsjzd('#select6','ZDK_GXY_YWBLFY')//药物不良反应；
+jsbsjzd('#select7','ZDK_JSJBFZ_ZJZLXG')//精神病治疗效果
+jsbsjzd('#select8','ZDK_JSJBFZ_BCSFFL')//读取精神病本次随访分类数据字典接口
+jsbsjzd('#select100','ZDK_JSB_YW')//读取精神病用药情况数据字典接口：
+jsbsjzd('#select9','ZDK_JSJBFZ_QKNL')//读取精神病饮食情况数据字典接口：
+jsbsjzd('#select10','ZDK_JSJBFZ_QKNL')//读取精神病个人生活料理数据字典接口：
+jsbsjzd('#select11','ZDK_JSJBFZ_QKNL')//读取精神病家务劳动数据字典接口：
+jsbsjzd('#select12','ZDK_JSJBFZ_QKNL')//读取精神病社会人际交往字典接口：
+jsbsjzd('#select13','ZDK_JSJBFZ_QKNL')//读取精神病学习能力字典接口：
+jsbsjzd('#select14','ZDK_JSJBFZ_QKNL2')//精神病生产劳动及工作
+jsbsjzd3('#select15','ZDK_GG_SF')//精神病是否转诊；
+jsbsjzd('#select16','ZDK_GXY_YWBLFY')//实验室检查；
+
+sjzd1('.kfcs','ZDK_JSJBFZ_KFCS',1)
+sjzd1('.mqzz','ZDK_JSJBFZ_MQZZ',1)//多选读取不规律服药原因
+date1('#date');//调用日期函数；
+date('#date1')//调用日期函数；	
+//date2('#date2');
+//date2('#date2').disable();
+$('#pagee').click(function(){//增加随访记录；	
+console.log($("#date").val())
+console.log($('.bfzhbz').data('sjzd'))
+console.log($('#select').data('id'));
+console.log($('.mbsc-control').val());
+var yyxq_o=[];
+console.log($('.box2').children().length);
+console.log($(".mcyl1").eq(0).val())
+console.log($(".mcyl1").eq(0))
+console.log($(".mcyl1"))
+var number=100;
+for(var i=0;i<$('.box2').children(':visible').length;i++){
+yyxq_o.push({"mcyl":$('.box2').find('.mcyl1:visible').eq(i).val(),"ywmc":$('#select'+number+'_dummy').val(),"opert_y":1,"yycs":$('.box2').find('.mrcs1:visible').eq(i).val()})
+number++;
+}
+
+console.log($('#select2').data('name'));
+console.log(yyxq_o);
+var mqzz=$('.mqzz').data('sjzd')||"";
+var kfcs=$('.kfcs').data('sjzd')||"";
+var djtshyx=$('.qdzs').val()+','+$('.zs').val()+','+$('.zh').val()+','+$('.zsh').val()+','+$('.zsws').val();
+console.log(djtshyx);
+var box='';
+var box='{"delflag":"0","shrjjw":"'+$('#select12').data('name')+'","deldate":"","ywblfyx":"","zzl":"'+$('#select').data('name')+'","zss":"'+$('.zsh').val()+'","wxx":"'+$('#select2').data('name')+'","inputdate":"2016-07-11","sfglid":"14682257921104","ywblfy":"'+$('#select6').data('name')+'","inputor":"try","grjkdah":"'+data.conarray[0].grikdah+'","grshll":'+$('#select10').data('name')+',"mccyrq":"'+$('#date2').val()+'","status":"0","mqzkqt":"","scldgz":"'+$('#select14').data('name')+'","modifydate":"2016-07-26","fyycx":"'+$('#select5').data('name')+'","zs":"'+$('.zs').val()+'","zh":"'+$('.zh').val()+'","bh":"","jkdaid":"'+data.conarray[0].jkdaid+'","kfcsqt":"","editor":"\u7ba1\u7406\u5458","xcsfrq":"'+$('#date1').val()+'","dxdjid":"'+data.conarray[0].dxdjid+'","sysjc":"'+$('.sysjc').val()+'","zzyy":"'+$('.zzyy').val()+'","zzjg":"'+$('.zzjg').val()+'","zyqk":"'+$('#select4').data('name')+'","zsws":"'+$('.zsws').val()+'","zlxg":"'+$('#select7').data('name')+'","zdyj":"","ysqk":"'+$('#select9').data('name')+'","xxnl":"'+$('#select13').data('name')+'","smqk":"'+$('#select1').data('name')+'","sfzz":"'+$('#select15').data('name')+'","sfyy":"","sfys":"'+$('.sfys').val()+'","sfrq":"'+$('#date').val()+'","qtjb":"","qdzs":"'+$('.qdzs').val()+'","pgfl":"'+$('#select8').data('name')+'","name":"\u9648\u6021","mqzz":"'+mqzz+'","kfcs":"'+kfcs+'","jwld":"'+$('#select11').data('name')+'","gsqk":"'+$('#select3').data('name')+'","sysjcx":"'+$('#select16').data('name')+'"}';
+var box=box.replace(/"undefined"/g,'""').replace(/undefined/g,'""');
+console.log(box);
+var box1=JSON.parse(box);
+console.log(box1);
+box1.yyxq_o=yyxq_o;
+console.log(box1);
+var box2=JSON.stringify(box1);
+var content=encodeURIComponent(box2);//转化json;
+$.ajax({//新增随访；
+　　type:'post',
+	url:'http://192.168.1.237:9003/ggws/jsb/jsbsfjl_edit',
+　　data:{'edit_stat':'0','content':content},
+　　dataType:'json',
+	cache:false,
+	async:false,
+　　success:function(data3){
+		console.log(data3)
+	},
+	error:function(err1){
+	console.log(err1);　　
+　　}
+　　})
+});//新增；下面是修改；
+	
+			})
+$('.none').click(function(){//修改随访；
+
+$('.boxd').html('');
+$('.list').html('');
+		next('#pageA','#pageD');
+					var arr1='';
+	arr1=' <div class="content">'+
+'  <ul>'+
+'		<li>'+
+'		<p class="card1">姓名:'+data.conarray[0].name+'</p><p class="xb">性别:'+sex+'</p><p class="timer">出生日期:'+data.conarray[0].csrq+'</p>'+
+'	</li>'+
+'	<li>'+
+'	<p class="name">健康档案号:'+data.conarray[0].grjkdah+'</p>'+
+'</li>'+
+'<li>'+
+'<p>地址:</p><p class="dz">'+data.conarray[0].xzdz+'</p>'+
+'</li>'+
+'</ul>'+
+'</div>';
+				$.ajax({//读取重症精神病随访记录数据接口：
+　　type:'get',
+	url:'http://192.168.1.237:9003/ggws/jsb/getjsbsfjl',
+　　data:{'zid':data.conarray[0].dxdjid},
+　　dataType:'json',
+	cache:false,
+	async:false,
+　　success:function(data){
+		console.log(data)
+var arr2='';
+console.log(data);
+console.log(data.conarray.length)
+for(var i=0;i<data.conarray.length;i++){
+arr2+='<li>'+
+'<div class="img"><img src="../images/img_person_pack_list_doctor.png" class="doctor"/></div><div class="name">'+data.conarray[i].sfys+'</div>'+'<div class="time">'+data.conarray[i].sfrq+'</div>'+
+'<div class="wxj">危险级:'+data.conarray[i].wxx+'级</div>'+
+'</li>'}
+$('.boxd').append(arr1);
+$('#pageD .list').append(arr2);
+		$('.dz').width($(document)[0].body.clientWidth-60);
+$('.list li').click(function(){
+$('.boxe').html('');
+var index=$(this).index();
+console.log(index);
+next('#pageD','#pageE')
+
+	var arr1='';
+	var ad=19;
+	console.log(data.conarray[index].yyxq_o.length)
+			for(var i=0;i<data.conarray[index].yyxq_o.length;i++){
+			arr1+='<div class="qk">'+
+'<input type="text" id="select'+ad+'" value="'+data.conarray[index].yyxq_o[i].ywmc+'"></select><input type="text"class="mrcs1"value="'+data.conarray[index].yyxq_o[i].yycs+'"/><input type="text"class="mcyl1"value="'+data.conarray[index].yyxq_o[i].mcyl+'"/><img src="../images/delete.png" class="btn1" />'+
+'</div>';
+ad++;
+			}
+			console.log(arr1);
+			console.log(data)
+			var arr='<div class="head"> '+
+'<div class="top"> '+
+'<div class="name">姓名：</div>'+
+'<div class="ming">'+data.conarray[index].name+'</div>'+
+'</div>'+
+'<div class="down"> '+
+'<div class="name">健康档案号：</div>'+
+'<div class="ming">'+data.conarray[index].grjkdah+'</div>'+
+'</div>'+
+'<div class="line"></div>'+
+'</div>'+
+'<div class="content">'+
+'<div class="left"><label>危险性:</label><select id="select2"class="zzl"/></select><span class="icon"></span></div>'+
+'<div class="right"><label>自知力:</label><select id="select"class="zzl"/></select><span class="icon"></span></div>'+
+'<div class="left"><label>目前症状:</label><input type="text"class="mqzz"readonly/><span class="icon"></span></div>'+
+'<div class="left"><label>睡眠情况:</label><input type="text"class="smqk"id="select1"/><span class="icon"></span></div>'+
+'<div class="right"><label>饮食情况:</label><input type="text"class="ysqk"id="select9"/><span class="icon"></span></div>'+
+'<div class="line"></div>'+
+'<div class="one"><span class="left"><label>社会功能情况</label></span></div>'+
+'<div class="left"><label>个人生活料理:</label><input class="grshll"id="select10"/><span class="icon"></span></div>'+
+'<div class="right"><label>家务劳动:</label><input class="jwld"id="select11"/><span class="icon"></span></div>'+
+'<div class="left"><label>社会人际交往:</label><input class="shrjjw"id="select12"/><span class="icon"></span></div>'+
+'<div class="right"><label>学习能力:</label><input class="xxnl"id="select13"/><span class="icon"></span></div>'+
+'<div class="left"><label>生产劳动及工作:</label><input class="scld"id="select14"/><span class="icon"></span></div>'+
+'<div class="line"></div>'+
+'<div class="one"><span class="left"><label>患者对家庭社会的影响</label></span></div>'+
+'<div class="left"><label>1.轻度滋事:</label><input class="qdzs"value="'+data.conarray[index].qdzs+'"/></div>'+
+'<div class="right"><label>2.肇　事:</label><input class="zs"value="'+data.conarray[index].zs+'"/></div>'+
+'<div class="left"><label>3.肇　　祸:</label><input class="zh"value="'+data.conarray[index].zh+'"/></div>'+
+'<div class="right"><label>4.自　伤:</label><input class="zsh"value="'+data.conarray[index].zss+'"/></div>'+
+'<div class="left"><label>5.自杀未遂:</label><input class="zsws"value="'+data.conarray[index].zsws+'"/></div>'+
+'<div class="line"></div>'+
+'<div class="left"><label>关锁情况:</label><select id="select3"></select><span class="icon"></span></div>'+
+'<div class="right"><label>住院情况:</label><select id="select4"class="zyqk"></select><span class="icon"></span></div>'+
+'<div class="left"><label>末次出院时间:</label><input class="mccysj"id="date2"value="'+data.conarray[index].mccyrq+'"/><span class="icon"></span></div>'+
+'<div class="left"><label>实验室检查:</label><input class="sysjc"id="select16"/><span class="icon"></span></div>'+
+'<div class="left"><label>服药依从性:</label><select class="fyycx"id="select5"></select><span class="icon"></span></div>'+
+'<div class="left"><label>药物不良反应:</label><select class="ywblfy"id="select6"></select><span class="icon"></span></div>'+
+'<div class="left"><label>治疗效果:</label><select class="zlxg"id="select7"></select><span class="icon"></span></div>'+
+'<div class="left"><label>是否转诊:</label><input class="sfzz"id="select15"/><span class="icon"></span></div>'+
+'<div class="left"><label>转诊原因:</label><input class="zzyy" value="'+data.conarray[index].zzyy+'"/></div>'+
+'<div class="left"><label>转诊机构及科室:</label><input class="zzjg"value="'+data.conarray[index].zzjg+'"/></div>'+
+'<div class="line"></div>'+
+'<div class="qk"><div class="yyqk">用药情况：</div><img src="../images/public_add.png" class="btn" /></div>'+
+'<div class="qk1"><div class="ywmc">药物名称</div><div class="mrcs">每日次数</div><div class="mcyl">每次药量</div><div class="cz">操作</div></div>'+
+'<div class="box2">'+
+arr1+
+'</div>'+
+'<div class="line"></div>'+
+'<div class="left"><label>康复措施:</label><input type="text"class="kfcs"readonly/><span class="icon"></span></div>'+
+'<div class="left"><label>本次随访分类:</label><select class="bcsffl"id="select8"></select><span class="icon"></span></div>'+'<div class="line"></div>'+
+'<div class="left"><label>随访医生:</label><input type="text" class="sfys"value="'+data.conarray[index].sfys+'"/></div>'+
+'<div class="left"><label>随访时间:</label><input type="text" id="date"class="sfsj" value="'+data.conarray[index].sfrq+'"/><span class="icon"></span></div>'+
+'<div class="left"><label>下次随访时间:</label><input type="text" id="date1"class="xcsfsj"value="'+data.conarray[index].xcsfrq+'"/><span class="icon"></span></div>'+
+'</div>';
+$('.boxe').append(arr);
+
+var ad=19;
+
+for(var i=0;i<data.conarray[index].yyxq_o.length;i++){
+jsbsjzd2("#select"+ad,'ZDK_JSB_YW');//读取精神病用药情况数据字典接口：
+$('#select'+ad+'_dummy').val(data.conarray[index].yyxq_o[i].ywmc);
+$("#select"+ad+"_dummy").css('width','3.2rem')
+ad++;
+}
+
+console.log(data)
+
+//必须要先调用单选函数；让选择器变为#select_dummy的形式；
+			
+jsbsjzd('#select','ZDK_JSJBFZ_ZZL')//读取精神病自知力数据字典接口：
+jsbsjzd('#select1','ZDK_JSJBFZ_QKNL')//读取精神病睡眠情况数据字典接口：
+jsbsjzd('#select2','ZDK_JSJBFZ_WXX')//读取精神病危险性情况数据字典接口：
+jsbsjzd('#select3','ZDK_JSJBFZ_GSQK')//读取精神病关锁情况数据字典接口：
+jsbsjzd3('#select4','ZDK_JSJBFZ_ZYQK')//精神病住院情况
+jsbsjzd('#select5','ZDK_JKTJB_FYYCX')//精神病服药依从性；
+jsbsjzd('#select6','ZDK_GXY_YWBLFY')//药物不良反应；
+jsbsjzd('#select7','ZDK_JSJBFZ_ZJZLXG')//精神病治疗效果
+jsbsjzd('#select8','ZDK_JSJBFZ_BCSFFL')//读取精神病本次随访分类数据字典接口
+//jsbsjzd('#select100','ZDK_JSB_YW')//读取精神病用药情况数据字典接口：
+jsbsjzd('#select9','ZDK_JSJBFZ_QKNL')//读取精神病饮食情况数据字典接口：
+jsbsjzd('#select10','ZDK_JSJBFZ_QKNL')//读取精神病个人生活料理数据字典接口：
+jsbsjzd('#select11','ZDK_JSJBFZ_QKNL')//读取精神病家务劳动数据字典接口：
+jsbsjzd('#select12','ZDK_JSJBFZ_QKNL')//读取精神病社会人际交往字典接口：
+jsbsjzd('#select13','ZDK_JSJBFZ_QKNL')//读取精神病学习能力字典接口：
+jsbsjzd('#select14','ZDK_JSJBFZ_QKNL2')//精神病生产劳动及工作
+jsbsjzd3('#select15','ZDK_GG_SF')//精神病是否转诊；
+jsbsjzd('#select16','ZDK_GXY_YWBLFY')//实验室检查；
+date1('#date');//调用日期函数；
+date('#date1');//调用日期函数；
+//date('#date2');//调用日期函数；
+console.log($('#select2_dummy'))	
+console.log($('#select21_dummy').val())
+console.log($('#select21_dummy').width())
+
+var length1=data.conarray[index].yyxq_o.length;
+console.log(length1)
+$('.box2').on('click','.btn1',function(e){//点击删除按钮再上opert_y=2;
+del(e);
+})
+var number=101;
+$('.boxe').off('click').on('click','.btn',function(){//点击增加按钮再上opert_y=1；
+add(number);	
+console.log("#select"+number)
+jsbsjzd2("#select"+number,'ZDK_JSB_YW')
+$("#select"+number+"_dummy").css('width','3.2rem')
+number++;
+})
+console.log(sjzd1);
+sjzd1('.kfcs','ZDK_JSJBFZ_KFCS',1)
+sjzd1('.mqzz','ZDK_JSJBFZ_MQZZ',1)//多选读取目前症状；
+//多选,单选数字变文字；
+function scdxsj1(id,typename,id1){//多选单选数字变文字函数；
+console.log(data.conarray[index][id])
+var listlist=data.conarray[index][id].split(',');
+console.log(listlist);
+var str6='';
+$.ajax({//读取并发症合并症数据字典接口：
+type:'get',
+url:'http://192.168.1.237:9003/ggws/pub/getmedicineone',
+data:{'type':1,'typename':typename},//
+dataType:'json',
+cache:false,
+success:function(data2){
+console.log(data2);
+				$(id1).val('');	
+		$.each(listlist,function(i,e1){
+$.each(data2.conarray,function(i,e2){
+if(e2.id==e1){
+	if($(id1).val()){var str7=e2.name+','+$(id1).val()}else{var str7=e2.name}
+$(id1).val(str7);
+
+}
+})
+})
+		},
+		error:function(err){
+		console.log(err);
+		}})
+}
+
+scdxsj1('zzl','ZDK_JSJBFZ_ZZL','#select_dummy')//自知力
+scdxsj1('smqk','ZDK_JSJBFZ_QKNL','#select1_dummy')//睡眠情况
+scdxsj1('wxx','ZDK_JSJBFZ_WXX','#select2_dummy')//危险性；
+scdxsj1('gsqk','ZDK_JSJBFZ_GSQK','#select3_dummy')//关锁情况；
+scdxsj1('zyqk','ZDK_JSJBFZ_ZYQK','#select4_dummy')//住院情况
+scdxsj1('fyycx','ZDK_JKTJB_FYYCX','#select5_dummy')//精神病服药依从性
+scdxsj1('ywblfy','ZDK_GXY_YWBLFY','#select6_dummy')//药物不良反应；
+scdxsj1('zlxg','ZDK_JSJBFZ_ZJZLXG','#select7_dummy')//精神病治疗效果
+scdxsj1('pgfl','ZDK_JSJBFZ_BCSFFL','#select8_dummy')//本次随访分类数据字典接口
+
+scdxsj1('ysqk','ZDK_JSJBFZ_QKNL','#select9_dummy')//精神病饮食情况数据字典接口
+scdxsj1('grshll','ZDK_JSJBFZ_QKNL','#select10_dummy')//个人生活料理
+scdxsj1('jwld','ZDK_JSJBFZ_QKNL','#select11_dummy')//家务劳动数
+scdxsj1('shrjjw','ZDK_JSJBFZ_QKNL','#select12_dummy')//社会人际交往
+scdxsj1('xxnl','ZDK_JSJBFZ_QKNL','#select13_dummy')//学习能力字典
+scdxsj1('scldgz','ZDK_JSJBFZ_QKNL2','#select14_dummy')//精神病生产劳动及工作
+scdxsj1('sfzz','ZDK_GG_SF','#select15_dummy')//精神病是否转诊；
+scdxsj1('sysjc','ZDK_GXY_YWBLFY','#select16_dummy')//实验室检查；
+//上面是单选数字变中文，下面是多选；
+scdxsj1('mqzz','ZDK_JSJBFZ_MQZZ','.mqzz')//多选目前症状；
+scdxsj1('kfcs','ZDK_JSJBFZ_KFCS','.kfcs')////多选读取康复措施；
+console.log($('#select15_dummy'))
+console.log($('#select15_dummy').val())
+if($('#pageE #select15_dummy').val()=='否'){
+$('#pageE .zzyy').attr('disabled',true)
+			$('#pageE .zzjg').attr('disabled',true)
+}
+$('#btnE').unbind('click').bind('click',function(){//精神病专项档案修改；
+back('#pageE','#pageA');
+//$('.none').click();
+var number=100;
+$.each($('.box2').children(),function(i,e){//添加删除；
+console.log(i);
+console.log(length1);
+if(i+1<=length1){
+if($(e).is(':hidden')){
+data.conarray[index].yyxq_o[i].opert_y=2
+console.log(2)
+}else{
+console.log(3);
+console.log($(e).children().val())
+data.conarray[index].yyxq_o[i].opert_y=1;
+data.conarray[index].yyxq_o[i].mcyl=$(e).find('.mcyl1:visible').val();
+data.conarray[index].yyxq_o[i].yycs=$(e).find('.mrcs1:visible').val();
+data.conarray[index].yyxq_o[i].ywmc=$(e).children().val();
+}
+}else if(i+1>length1){
+console.log(i);
+console.log($(e));
+console.log(1);
+if($(e).is(':visible')){
+console.log(4)
+data.conarray[index].yyxq_o.push({"mcyl":$(e).find('.mcyl1:visible').val(),"ywmc":$(e).children().val(),"opert_y":"1","yycs":$(e).find('.mrcs1:visible').val()})
+
+}
+}
+})
+var mqzz=$('.mqzz').data('sjzd')||data.conarray[index].mqzz||"";
+var kfcs=$('.kfcs').data('sjzd')||data.conarray[index].kfcs||"";
+//上面是多选；下面是单选；
+var shrjjw=$('#select12').data('name')||data.conarray[index].shrjjw||"";
+var zzl=$('#select').data('name')||data.conarray[index].zzl||"";
+var wxx=$('#select2').data('name')||data.conarray[index].wxx||"";
+var ywblfy=$('#select6').data('name')||data.conarray[index].ywblfy||"";
+var grshll=$('#select10').data('name')||data.conarray[index].grshll||"";
+var scldgz=$('#select14').data('name')||data.conarray[index].scldgz||"";
+var fyycx=$('#select5').data('name')||data.conarray[index].fyycx||"";
+var sysjc=$('#select16').data('name')||data.conarray[index].sysjc||"";
+var zyqk=$('#select4').data('name')||data.conarray[index].zyqk||"";
+var zlxg=$('#select7').data('name')||data.conarray[index].zlxg||"";
+var ysqk=$('#select9').data('name')||data.conarray[index].ysqk||"";
+var xxnl=$('#select13').data('name')||data.conarray[index].xxnl||"";
+var smqk=$('#select1').data('name')||data.conarray[index].smqk||"";
+var sfzz=$('#select15').data('name')||data.conarray[index].sfzz||"";
+var pgfl=$('#select8').data('name')||data.conarray[index].pgfl||"";
+var jwld=$('#select11').data('name')||data.conarray[index].jwld||"";
+var gsqk=$('#select3').data('name')||data.conarray[index].gsqk||"";
+
+
+
+var box='{"yyxq_o":"","delflag":"0","shrjjw":"'+shrjjw+'","deldate":"","ywblfyx":"","zzl":"'+zzl+'","zss":"'+$('.zsh').val()+'","wxx":"'+wxx+'","inputdate":"2016-07-11","sfglid":"'+data.conarray[index].sfglid+'","ywblfy":"'+ywblfy+'","inputor":"try","grjkdah":"'+data.conarray[index].grjkdah+'","grshll":"'+grshll+'","mccyrq":"","status":"0","mqzkqt":"","scldgz":"'+scldgz+'","modifydate":"'+CurentTime()+'","fyycx":"'+fyycx+'","zs":"'+$('.zs').val()+'","zh":"'+$('.zh').val()+'","bh":"","jkdaid":"'+data.conarray[index].jkdaid+'","kfcsqt":"","editor":"管理员","xcsfrq":"'+$('#date1').val()+'","dxdjid":"'+data.conarray[index].dxdjid+'","sysjc":"'+sysjc+'","zzyy":"'+$('.zzyy').val()+'","zzjg":"'+$('.zzjg').val()+'","zyqk":"'+zyqk+'","zsws":"'+$('.zsws').val()+'","zlxg":"'+zlxg+'","zdyj":"","ysqk":"'+ysqk+'","xxnl":"'+xxnl+'","smqk":"'+smqk+'","sfzz":"'+sfzz+'","sfyy":"","sfys":"'+$('.sfys').val()+'","sfrq":"'+$('#date').val()+'","qtjb":"","qdzs":"'+$('.qdzs').val()+'","pgfl":"'+pgfl+'","name":"'+data.conarray[index].name+'","mqzz":"'+mqzz+'","lrjg":"0111","kfcs":"'+kfcs+'","jwld":"'+jwld+'","gsqk":"'+gsqk+'","djtshyx":"","sysjcx":""}'
+var box1=JSON.parse(box);
+box1.yyxq_o=data.conarray[index].yyxq_o;
+var box=JSON.stringify(box1);
+console.log(box);
+
+content=encodeURIComponent(box);
+$.ajax({//修改；
+　　type:'post',
+	url:'http://192.168.1.237:9003/ggws/jsb/jsbsfjl_edit',
+　　data:{'edit_stat':'1','content':content},//
+　　dataType:'json',
+	cache:false,
+　　success:function(data2){
+		console.log(data2);
+
+	},
+	error:function(err3){
+	　console.log(err3);　
+　　}
+　　})
+	
+})
+})		
+		
+		},
+	error:function(err1){
+	console.log(err1);　　
+　　}
+　　})
+			
+			})
+			
+			
+			},
+	error:function(err1){
+	console.log(err1);　　
+　　}
+　　})
+})
+
+
+
+
+})
+</script>
+</head>
+<body>
+ <section>
+    <!-- view container -->
+    <ul id="pages" class="view-container" style="">
+      <!-- pageA container -->
+      <li id="pageA" class="page-container"style="display:block;"> 
+      <header><div class="top"><img src="../images/btn_back.png" id="pageaBack"/><h1 class="mui-title">精神病管理</h1><img src="../images/add.png" id="btnNext"></div><div class="down"><img src="../images/btn_img_scan.jpg" class="btn2" /><input type="text" class="chaxun"  placeholder="请输入姓名或省份证号搜索"/><img src="../images/img_public_search_normal.9.png" class="search"/></div></header>
+<div class="box">
+</div>
+	</li>
+	   <li id="pageB" class="page-container" style="display:none;"> 
+<header><div class="top"><img src="../images/btn_back.png" id="pageABack"/><h1 class="mui-title">精神病执行计划</h1></div></header>
+<div class="main1">
+
+</div>
+
+	  </li>
+	   <li id="pageC" class="page-container" style="display:none;"> 
+	   <div class="box1">
+ <header><div class="top1"><img src="../images/btn_back.png" id="pageCBack"/><h1 class="mui-title">精神病随访记录新增</h1><img src="../images/old_change.png" id="pagee"/></div></header>
+ <div class="main3">
+
+</div>
+	 </div>
+	   </li>
+	     <li id="pageD" class="page-container"style="display:none;"> 
+      <header><div class="top"><img src="../images/btn_back.png" id="pageDBack"/><h1 class="mui-title">精神病随访记录</h1><img src="../images/add.png" id="btn"></div></header>
+<div class="boxd">
+
+</div>
+<ul class="list">
+
+</ul>
+	</li>
+	        <li id="pageE" class="page-container"style="display:none;"> 
+      <header><div class="top"><img src="../images/btn_back.png" id="pageEBack"/><h1 class="mui-title">精神病随访记录修改</h1><img src="../images/old_change.png" id="btnE"></div></header>
+<div class="boxe">
+
+</div>
+
+	</li>
+		<li id="pageF" class="page-container" style="display:none;">
+	   <header><div class="top"><img src="../images/btn_back.png" id="pagefBack"/><h1 class="mui-title">个人档案选取</h1><img src="../images/add.png" id="btnfNext"></div><div class="down"><img src="../images/btn_img_scan.jpg" class="btn2" /><input type="text" class="chaxun"  placeholder="请输入姓名或省份证号搜索"/><img src="../images/img_public_search_normal.9.png" class="search"/></div></header>
+ <div class="boxf">	  
+
+	 </div>
+	  </li>
+	<li id="pageG" class="page-container" style="display:none;">
+	   <header><div class="top"><img src="../images/btn_back.png" id="pagegBack"/><h1 class="mui-title">个人基本信息增加</h1><img src="../images/add.png" id="btngNext"></div></header>
+ <div class="boxg">	
+
+</div>
+</li>
+<li id="pageH" class="page-container" style="display:none;">
+	   <header><div class="top"><img src="../images/btn_back.png" id="pageHBack"/><h1 class="mui-title">精神病专项档案新增</h1><img src="../images/old_change.png" id="btnHNext"></div></header>
+ <div class="boxh">	  
+
+	 </div>
+	  </li>
+	  <li id="pageI" class="page-container" style="display:none;">
+	   <header><div class="top"><img src="../images/btn_back.png" id="pageIBack"/><h1 class="mui-title">精神病专项档案修改</h1><img src="../images/old_change.png" id="btnINext"></div></header>
+ <div class="boxi">	  
+
+	 </div>
+	  </li>
+    </ul>
+  
+  </section>
+<script>
+
+$('#pageHBack').click(function(){
+$('.boxh').html('');
+back('#pageH','#pageA')
+})		
+
+$('#btnNext').click(function(){next('#pageA','#pageF')})
+		$('#pageABack').click(function(){
+		back('#pageB','#pageA');
+		})
+		$('#pageCBack').click(function(){//B页面返回A页面；
+	$('.main3').html('');
+		back('#pageC','#pageA');
+		})
+		
+		$('#pagefBack').click(function(){
+		back('#pageF','#pageA');
+		})
+		$('#pageDBack').click(function(){//B页面返回A页面；
+	$('.boxd').html('');
+		 $('#pageA').css({'display' : 'block'});
+        $('#pageD').addClass('animatestart sliderightout');
+		 
+		 setTimeout(function(){ //动画结束时重置class
+              $('#pageD').css('display', 'none');
+              $('#pageD').removeClass('animatestart sliderightout');
+            }, 350);	
+		})
+		$('#pageEBack').click(function(){
+		$('.boxe').html('');
+		back('#pageE','#pageD')
+		})
+		$('#pageIBack').click(function(){
+		back('#pageI','#pageA')
+		})
+</script>
+</body>
+</html>

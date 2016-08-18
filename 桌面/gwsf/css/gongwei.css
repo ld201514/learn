@@ -1,0 +1,215 @@
+﻿*{padding:0;margin:0;}
+ul{list-style:none;}
+body {
+        font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif;font-size:0.4rem;
+}
+input{outline:none;  -webkit-appearance: none;border:0;    border: 1px solid rgba(0,0,0,.2);-webkit-user-select: text;-webkit-tap-highlight-color: transparent;}
+
+
+#pageaBack{width:15px;    
+    padding-right: 10px;
+     padding-top:10px;
+     float:left;
+	 padding-left:10px;}
+
+
+
+#pageA .dz,#pageC .dz,#pageF .dz{width:8.2rem;}
+#pageA .box,#pageF .box{position:relative;}
+#pageA .main,#pageF .main{position:relative;top:94px;}
+#pageA .editor,#pageF .editor{width:25px;display:inline-block;float:right;padding-left:8px;padding-top:8px;}
+#pageA .line,#pageF .line{height:10px;background:#F0F2F2;}
+#pageA .title,#pageF .title, #pageA .time,#pageF .time{display:inline-block;}
+#pageA .time,#pageF .time{float:right;}
+#pageA .head,#pageF .head{margin:0 10px;height:40px;line-height:40px;border-bottom:1px solid #F0F2F2;}
+#pageA .img,#pageF .img{display:inline-block;width:34px;}
+#pageA .content ul,#pageF .content ul{margin:0 10px;}
+#pageA p,#pageF p{display:inline-block;}
+
+#pageA .content li,#pageF .content li{padding-top:10px;}
+#pageA .card,#pageF .card{vertical-align:8px;}
+#pageA .timer,#pageF .timer{vertical-align:8px;margin-left:30px;}
+#pageA .name,#pageF .name{vertical-align:8px;}
+
+#pageA .content,#pageF .content{padding-bottom:10px;border-bottom:1px solid #F0F2F2;}
+#pageA .bottom ul,#pageF .bottom ul{display: table;padding-top:10px;
+    table-layout: fixed;
+	padding-bottom:10px;
+    width: 100%;
+	line-height:25px;}
+#pageA .bottom ul li{display:table-cell;height:34px;border-right:1px solid #F0F2F2;}
+#pageA .bottom ul .ckjh,#pageF .bottom ul .ckjh,#pageA  .bottom ul .xzsf,#pageF  .bottom ul .xzsf,#pageA  .bottom ul .none,#pageF  .bottom ul .none{padding-left:35px;line-height:35px;}
+#pageA .bottom ul .none,#pageF .bottom ul .none{border-right-width:0;background:url(../images/suifang_record.png) no-repeat 10px center;background-size:20px;}
+#pageA .ckjh,#pageF .ckjh{background:url(../images/carry_out_a_project.png) no-repeat 10px center;background-size:20px;}
+#pageA .xzsf,#pageF .xzsf{background:url(../images/new_add_suifang.png) no-repeat 10px center;background-size:20px;}
+#pageA .icon,#pageF .icon{margin-left:4px;background:url(../images/sex_b.png) no-repeat;height:20px;width:20px;display:inline-block;vertical-align:5px;}
+
+#pageF .inputdate{position:absolute;left:7.89815rem;}/*这是pageA 与pageF的唯一的不同点；*/
+
+
+	 
+	 @-webkit-keyframes sliderightout{from{-webkit-transform:translateX(0px);opacity:1}to{-webkit-transform:translateX(50%);opacity:0}}
+@-webkit-keyframes slideleftin{from{-webkit-transform:translateX(-50%);opacity:0}to{-webkit-transform:translateX(0px);opacity:1}}
+@-webkit-keyframes slideleftout{from{-webkit-transform:translateX(0px);opacity:1}to{-webkit-transform:translateX(-50%);opacity:0}}
+@-webkit-keyframes sliderightin{from{-webkit-transform:translateX(50%);opacity:0}to{-webkit-transform:translateX(0px);opacity:1}}
+
+.slideleftout{-webkit-animation:slideleftout 350ms ease-in-out;}
+.slideleftin{-webkit-animation:slideleftin 350ms ease-in-out;}
+.sliderightout{-webkit-animation:sliderightout 350ms ease-in-out;}
+.sliderightin{-webkit-animation:sliderightin 350ms ease-in-out;}
+.animatestart{position:absolute;top:0;left:0;z-index:3;width:100%;height:100%;overflow-x:hidden}
+.animatestart.page-container{overflow-x:hidden;-webkit-transform:translate3d(0,0,0);-webkit-backface-visibility:hidden;background-color:#f5f5f5}
+
+#pageB .main1{position:relative;top:44px;}
+#pageB header,#pageD header{height:44px;}
+#pageB .content ul,#pageD .content ul{margin:0 10px;}
+#pageB p,#pageD p{display:inline-block;}
+#pageB .content ul li,#pageD .content ul li{line-height:30px;}
+#pageB .xb,#pageD .xb{padding-left:4px;}
+#pageB .timer,#pageD .timer{float:right;}
+#pageB .dz,#pageD .dz{vertical-align:top;width:8.1875rem;}
+#pageB .xb,#pageD .xb{padding-left:30px;}
+#pageB .timer,#pageD .timer{float:right;padding-right:20px;}
+
+
+#pageC header,#pageE header{height:1.17333rem;}
+#pageC .main3{position:relative;top:1.17333rem;}
+#pageE .main2{position:relative;top:1.17333rem;}/*与pageC的不同*/
+#pageC .top,#pageC .down,#pageC .qk,#pageE .top,#pageE .down,#pageE .qk{height:1.06667rem;line-height:1.06667rem;font-size:0.4rem;}
+#pageC .name,#pageC .ming,#pageE .name,#pageE .ming{display:inline-block;padding-left:0.21333rem;}
+#pageC .qk,#pageC .qk1,#pageE .qk,#pageE .qk1{border-bottom:1px solid #F0F2F2;padding-left:0.26667rem;}
+#pageC .top,#pageE .top{border-bottom:1px solid #F0F2F2;}
+#pageC .line,#pageE .line{height:0.26667rem;background:#F0F2F2;}
+
+#pageC .left,#pageE .left{display:inline-block;height:44px;line-height:44px;}
+#pageC #select2_dummy,#pageE #select2_dummy{width:1.81333rem;margin-left:0.26667rem;}
+#pageC .mqzz,#pageE .mqzz{width:3.06667rem;margin-left:0.26667rem;}
+#pageC .bfzhbz,#pageE .bfzhbz{width:6.089333rem;}
+#pageC .btn,#pageE .btn{width:0.66667rem;float:right;padding-right:0.26667rem;padding-top:0.16rem;}
+#pageC .btn1,#pageE .btn1{width:0.66667rem;float:right;padding-right:0.53333rem;padding-top:0.05333rem;}
+#pageC .yyqk,#pageC .ywmc,#pageC .mrcs,#pageC .mcyl,#pageE .yyqk,#pageE .ywmc,#pageE .mrcs,#pageE .mcyl{display:inline-block;text-align:center;height:1.06667rem;line-height:1.06667rem;}
+
+#pageC input,#pageE input{height:0.8rem;}
+#pageC .left1 label,#pageE .left1 label{padding-left:0.53333rem;}
+#pageC .left1,#pageE .left1{display: inline-block;
+    height: 1.06667rem;
+    line-height: 1.06667rem;}
+#pageC #select19_dummy,#pageE #select19_dummy{width:3.09333rem;}
+
+#pageC .fywzlcs,#pageC .bglfyyy,#pageE .fywzlcs,#pageE .bglfyyy{width:6.56rem;}
+#pageC .ysjy,#pageC #select_dummy,#pageE .ysjy,#pageE #select_dummy{width:7.78rem;}
+#pageC .sfys,#pageC #date,#pageC #date1,#pageE .sfys,#pageE #date,#pageE #date1{width:4.50667rem;}
+	
+/*	
+#pageE header{height:1.17333rem;}
+#pageE .main2{position:relative;top:1.17333rem;}
+
+#pageE header{height:1.17333rem;}
+#pageE .main3{position:relative;top:1.17333rem;}
+#pageE .top,#pageE .down,#pageE .qk{height:1.06667rem;line-height:1.06667rem;font-size:0.4rem;}
+#pageE .name,#pageE .ming{display:inline-block;padding-left:0.21333rem;}
+#pageE .qk,#pageE qk1{border-bottom:1px solid RGB(65, 65, 65);padding-left:0.26667rem;}
+#pageE .top{border-bottom:1px solid RGB(65, 65, 65);}
+#pageE .line{height:0.26667rem;background:#F0F2F2;}
+
+#pageE .left{display:inline-block;height:1.06667rem;line-height:1.06667rem;}
+
+#pageE .mqzz{width:3.06667rem;margin-left:0.26667rem;}
+#pageE .bfzhbz{width:5.97333rem;}
+#pageE .btn{width:0.66667rem;float:right;padding-right:0.26667rem;padding-top:0.16rem;}
+#pageE .btn1{width:0.66667rem;float:right;padding-right:0.53333rem;padding-top:0.05333rem;}
+{display:inline-block;text-align:center;height:1.06667rem;line-height:1.06667rem;}
+*/
+#pageE .cz,#pageC .cz{float:right;padding-right:0.26667rem;padding-top:0.26667rem;}
+#pageE .ywmc,#pageC .ywmc{width:2.82667rem;padding-left:0.26667rem;}
+#pageE .mrcs,#pageC .mrcs{width:2.93333rem;}
+#pageE .mcyl,#pageC .mcyl{width:2.05333rem;}
+#pageE .ywmc1,#pageC .ywmc1{width:30%;margin-left:0.13333rem;}
+#pageE .mrcs1,#pageC .mrcs1{width:25%;margin-left:0.13333rem;}
+#pageE .mcyl1,#pageC .mcyl1{width:25%;margin-left:0.13333rem;}
+
+#pageE .icon,#pageC .icon{  
+    position: absolute;
+    z-index: 1;
+    top: 0.4rem;
+    right:-0.18667rem;
+  width:0.8rem;
+  height:0.37333rem;
+    text-align: center;
+	background:url(../images/filter_down_arrow.png) no-repeat;
+	background-size:0.53333rem;
+	}
+	#pageE .left,#pageC .left{position:relative;}
+#pageE label,#pageC label{text-align:left;padding-left:0.26667rem;}
+#pageE .yyqk,#pageC .yyqk{padding-left:0.21333rem;}
+
+
+
+#pageE .qk input,#pageC .qk input{width:2.05333rem;}
+
+#pageE #pagee,#pageC #pagee{margin-left:0.26667rem;width:0.26667rem;
+    padding-right: 0.26667rem;
+    padding-top: 0.26667rem;
+    float: right;}
+#pageE #pageeBack,#pageC #pageeBack{width:0.26667rem;margin-top:0.26667rem;margin-left:0.26667rem;color:#fff;}	
+
+#pageD .boxd{position:relative;top:44px;}
+#pageD .sflb{padding:10px;background:url(../images/ic_item_right.png) no-repeat right center;border-bottom:1px solid #F4F4F4;}
+#pageD .xcsfrq1{margin-left:30px;}
+
+#pageD .gly1{background:url(../images/img_person_pack_list_doctor.png) no-repeat 0 center;background-size:10px;padding-left:20px;}
+
+#pageD .list{position:relative;top:38px;}
+#pageD .sfsj1,#pageD .xcsfrq1{display:inline-block;font-size:12px;}
+#pageD p{vertical-align:top;}
+
+
+/* #pageF .boxf{position:relative;top:84px;}
+#pageF .head{position:relative;}
+#pageF .title{padding:0.37037rem 0;margin-right:0.37037rem;margin-left:0.27778rem;font-size:0.37037rem;width:100%;border-bottom:1px solid #DDDEDE;}
+#pageF .inputdate{position:absolute;top:50%;transform:translate(0,-50%);left:7.89815rem;font-size:0.33333rem;}
+ 
+
+ #pageF .content{font-size:0.33333rem;padding:0.27778rem;}
+#pageF .content p{display:inline-block;}
+
+#pageF .img {
+    display: inline-block;
+    width: 0.78703rem;
+}
+#pageF .dz{width:8.238rem;}
+#pageF .content .id_card{width:0.61111rem;}
+#pageF .content .img_info_list_name_left,#pageF .content .img_info_list_addr,#pageF .content .img_zdlx{width:0.48148rem;}
+#pageF .content .timer{margin-left:1.05556rem;}
+#pageF .inputdate{display:inline-block;} 
+ */
+ #pageH .boxh{position:relative;top:1.17333rem;}
+ #pageI .boxi{position:relative;top:1.17333rem;}/*pageH与pageI的不同点；*/
+#pageH header,#pageI header{height:1.17333rem;}
+#pageH input,#pageI input{height:0.8rem;}
+
+#pageH .left label,#pageI .left label{margin-left:0.26667rem;}
+#pageH .left1 label,#pageI .left1 label{margin-left:0.26667rem;height:1.06667rem;line-height:1.06667rem;display:inline-block;text-align:right;width:1.81333rem;}
+#pageH .jzs,#pageH .zlmc,#pageH .zdyy,#pageH .qzyj,#pageH .tlhd1,#pageH .ys,#pageI .jzs,#pageI .zlmc,#pageI .zdyy,#pageI .qzyj,#pageI .tlhd1,#pageI .ys{width:7.53rem;margin-left:0.13333rem;}
+#pageH .dbm,#pageI .dbm{width:6.83rem;margin-left:0.13333rem;}
+#pageH #select_dummy,#pageI #select_dummy{width:5.168rem;margin-left:0.13333rem;}
+#pageH .blxtx,#pageI .blxtx{width:5.015rem;margin-left:0.13333rem;}
+#pageH .xtxmc,#pageI .xtxmc{width:7.09333rem;margin-left:0.13333rem;}
+#pageH .bmjpx,#pageI .bmjpx{width:5.768rem;margin-left:0.13333rem;}
+#pageH .shxg,#pageI .shxg{height:1.06667rem;line-height:1.06667rem;padding-left:0.26667rem;}
+#pageH .tlhd,#pageH .yjpl,#pageH .xyzs,#pageH .jsjl,#pageH .hdpl,#pageH .jsls,#pageH .yspl,#pageH .ysl,#pageH .hdsj,#pageH .jszs,#pageI .tlhd,#pageI .yjpl,#pageI .xyzs,#pageI .jsjl,#pageI .hdpl,#pageI .jsls,#pageI .yspl,#pageI .ysl,#pageI .hdsj,#pageI .jszs{width:1.54667rem;}
+#pageH .yyyp1,#pageH .yyyp2,#pageH .yyyp3,#pageI .yyyp1,#pageI .yyyp2,#pageI .yyyp3{width:7.14667rem;}
+#pageH .left2 label,#pageI .left2 label{margin-left:0.26667rem;width:2.29333rem;display:inline-block;text-align:right;height:1.06667rem;}
+#pageH .left3 label,#pageI .left3 label{margin-left:0.26667rem;width:2.66667rem;display:inline-block;text-align:right;height:1.06667rem;}
+#pageH .left ,#pageH .left4,#pageH .left3,#pageH .left2,#pageI .left ,#pageI .left4,#pageI .left3,#pageI .left2{height:1.06667rem;display:inline-block;line-height:1.06667rem;}
+
+#pageH .tzhyy1,#pageH .tzhyy2,#pageH .tzhyy3,#pageI .tzhyy1,#pageI .tzhyy2,#pageI .tzhyy3{width:6.77333rem;}
+#pageH .zdsj,#pageI .zdsj{width:3.25333rem;}
+#pageH .blzd,#pageH #date1,#pageI .blzd,#pageI #date1{width:2.43rem;}
+#pageH .zrys,#pageI .zrys{width:2rem;}
+#pageH .right,#pageI .right{padding-left:0.26667rem;}
+#pageH #select1_dummy,#pageH #select3_dummy,#pageH #select2_dummy,#pageI #select1_dummy,#pageI #select3_dummy,#pageI #select2_dummy{width:2.83rem;}
+
+#pageH .right1 label,#pageI .right1 label,#pageH .right2 label,#pageI .right2 label{width:2.26667rem;display:inline-block;text-align:right;}
+#pageH .left4 label,#pageI .left4 label{margin-left:0.26667rem;width:2.66667rem;display:inline-block;text-align:right;height:1.06667rem;}
+#pageH #date1,#pageI #date1{width:3.65rem;}

@@ -1,0 +1,45 @@
+header{position:fixed;
+right: 0;
+    left: 0;
+	z-index:999;
+}
+header .top{
+	z-index:999;
+	width: 100%;
+	height:44px;
+	background-color: #2C81D7;	
+	color: #FFF;	
+}	 
+.mui-title{
+	right: 40px;
+    left: 40px;
+    font-size: 20px;
+    font-weight: 500;
+    line-height:44px;
+    position: absolute;
+	    padding: 0;
+    text-align: center;
+    white-space: nowrap;
+    display: inline-block;
+    overflow: hidden;
+    width: auto;
+    margin: 0;
+    text-overflow: ellipsis;
+}
+#pageaBack,#pageCBack,#pagefBack,#pageDBack,#pageIBack,#pageABack,#pageEBack,#pageHBack
+	{width:15px;    
+    padding-right: 10px;
+     padding-top:10px;
+     float:left;
+	 padding-left:10px;}
+
+#pageE #pagee,#pageC #pagee,#btnE,#btnINext{
+    float: right;
+	margin-top:-8px;}
+.down{position:relative;overflow:hidden;background:#fff;}
+	#btnNext,#btnfNext,#btnHNext,#btn{width:40px;    
+   
+     float: right;}
+.btn2{width:30px;margin-top:13px;margin-left:10px;}	
+.chaxun{height:30px;margin-left:10px;font-size:15px;vertical-align:5px;width:6.66667rem}
+	.search{width:55px;right:10px;top:54px;position:fixed;}
